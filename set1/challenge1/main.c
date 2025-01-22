@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 
   size_t output_num_bytes = (size_t) ceil(4.0 * ((double) num_bytes / 3.0));
   size_t cur_output_index = 0;
-  unsigned char *output_string = malloc(output_num_bytes + 2); // Allocate space for base 64 string + padding if needed
+  unsigned char *output_string = malloc(output_num_bytes + 3); // Allocate space for base 64 string + padding if needed + null term
 
   if (!output_string) {
     perror("Failed to allocate memory for output string.");
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
       output_string[cur_output_index++] = base64CharacterMap[first_part];
       output_string[cur_output_index++] = base64CharacterMap[expanded_part];
       output_string[cur_output_index++] = '=';
-      output_string[cur_output_index] = '=';
+      output_string[cur_output_index++] = '=';
 
       break;
     }
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
       output_string[cur_output_index++] = base64CharacterMap[first_part];
       output_string[cur_output_index++] = base64CharacterMap[second_part];
       output_string[cur_output_index++] = base64CharacterMap[expanded_part];
-      output_string[cur_output_index] = '=';
+      output_string[cur_output_index++] = '=';
 
       break;
     }
@@ -126,6 +126,9 @@ int main(int argc, char *argv[]) {
     output_string[cur_output_index++] = base64CharacterMap[third_part];
     output_string[cur_output_index++] = base64CharacterMap[fourth_part];
   }
+
+  // Add null terminator
+  output_string[cur_output_index] = '\0';
 
   // Display base64 output
   printf("%s", output_string);
